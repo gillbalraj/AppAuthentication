@@ -31,7 +31,7 @@ app.get("/", function(req, res){
     res.render("home")
 })
 
-app.get("/secret", function(req, res){
+app.get("/secret", isLoggedIn,function(req, res){
     res.render("secret")
 })
 //AUTH ROUTES
@@ -40,7 +40,7 @@ app.get("/register",function(req, res){
     res.render("register")
 });
 // handeling user register
-app.post("/register", function(req, res){
+app.post("/register",function(req, res){
     // res.send("REGISTER POST REQUEST")
     req.body.username
     req.body.password
@@ -69,6 +69,20 @@ app.post("/login", passport.authenticate("local", {
     failureMessage: "Wrong username or password"
 }) ,function(req,res){
 })
+//logout
+app.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/")
+})
+
+//check if user loged in
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect("/login")
+}
+
 
 // app.listen(process.env.PORT, process.env.IP, function(){
 //     console.log('Listening to port 8080');
